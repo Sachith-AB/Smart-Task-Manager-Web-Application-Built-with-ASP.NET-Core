@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -20,7 +21,7 @@ namespace api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var taskItems = _context.TaskItem.ToList();
+            var taskItems = _context.TaskItem.ToList().Select(s => s.toTaskItemDto());
             return Ok(taskItems);
         }
 
@@ -31,7 +32,7 @@ namespace api.Controllers
 
             if (taskItem == null) return NotFound();
 
-            return Ok(taskItem);
+            return Ok(taskItem.toTaskItemDto());
         }
     }
 }

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Models;
 
-namespace api.Models
+namespace api.DTOs.TaskItems
 {
-    public class TaskItem
+    public class TaskItemDto
     {
-        public int Id { get; set; }
-
-        [Required]
         public string Description { get; set; }
 
         public string Piority { get; set; }
@@ -21,9 +19,7 @@ namespace api.Models
         public DateTime Deadline { get; set; }
 
         public string AssignedToUserId { get; set; }
-        
-        public AppUser AssignToUser { get; set; }
-
+                
         public DateTime DueDate { get; set; }
 
         public bool IsCompleted { get; set; }
