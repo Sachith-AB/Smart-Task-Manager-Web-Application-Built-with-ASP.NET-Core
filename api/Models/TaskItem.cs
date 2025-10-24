@@ -21,9 +21,6 @@ namespace api.Models
         public DateTime Deadline { get; set; }
 
         public string AssignedToUserId { get; set; }
-        
-        public AppUser AssignToUser { get; set; }
-
         public DateTime DueDate { get; set; }
 
         public bool IsCompleted { get; set; }
