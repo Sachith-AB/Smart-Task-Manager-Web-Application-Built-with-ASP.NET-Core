@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,8 +21,10 @@ namespace api.Models
         [DataType(DataType.Date)]
         public DateTime Deadline { get; set; }
 
-        public string AssignedToUserId { get; set; }
-        
+        [Column("AssignToUserId")]
+        [ForeignKey("AssignToUser")]
+        public string AssignToUserId { get; set; }
+
         public AppUser AssignToUser { get; set; }
 
         public DateTime DueDate { get; set; }

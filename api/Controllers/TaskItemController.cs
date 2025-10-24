@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
+using api.DTOs.TaskItems;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,15 @@ namespace api.Controllers
             if (taskItem == null) return NotFound();
 
             return Ok(taskItem.toTaskItemDto());
+        }
+
+        [HttpPost]
+        public IActionResult createTaskItem([FromBody] CreateTaskItemDto newItem)
+        {
+            var newTaskItem = newItem.toTaskItemFromCreateDto();
+            _context.TaskItem.Add(newTaskItem);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(getById), new { id = newTaskItem.Id }, newTaskItem.toTaskItemDto());
         }
     }
 }

@@ -17,9 +17,23 @@ namespace api.Mappers
                 Piority = taskItem.Piority,
                 Status = taskItem.Status,
                 Deadline = taskItem.Deadline,
-                AssignedToUserId = taskItem.AssignedToUserId,
+                AssignToUserId = taskItem.AssignToUserId,
                 DueDate = taskItem.DueDate,
                 IsCompleted = taskItem.IsCompleted,
+            };
+        }
+
+        public static TaskItem toTaskItemFromCreateDto(this CreateTaskItemDto taskItemDto)
+        {
+            return new TaskItem
+            {
+                Description = taskItemDto.Description,
+                Piority = taskItemDto.Piority,
+                Status = taskItemDto.Status,
+                Deadline = taskItemDto.Deadline,
+                AssignToUserId = taskItemDto.AssignToUserId,
+                DueDate = taskItemDto.DueDate,
+                IsCompleted = taskItemDto.IsCompleted,
             };
         }
     }
