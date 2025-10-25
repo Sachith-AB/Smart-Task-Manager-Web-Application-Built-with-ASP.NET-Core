@@ -13,9 +13,9 @@ namespace api.Controllers
         private readonly ITaskItemRepository _repo = repo;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? sortBy, [FromQuery] bool isDescending = false, [FromQuery] string? searchTerm = null)
+        public async Task<IActionResult> GetAll([FromQuery] string? sortBy, [FromQuery] bool isDescending = false, [FromQuery] string? searchTerm = null, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var query = new QueryObject(sortBy, isDescending, searchTerm);
+            var query = new QueryObject(sortBy, isDescending, searchTerm, pageNumber, pageSize);
             var taskItems = await _repo.GetAllAsync(query);
             var taskItemDto = taskItems.Select(s => s.toTaskItemDto());
             return Ok(taskItemDto);

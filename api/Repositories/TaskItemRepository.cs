@@ -69,6 +69,10 @@ namespace api.Repositories
                 }
             }
 
+            // Apply pagination
+            var skipNumber = (queryObject.PageNumber - 1) * queryObject.PageSize;
+            taskItems = taskItems.Skip(skipNumber).Take(queryObject.PageSize);
+
             return await taskItems.ToListAsync();
         }
 
