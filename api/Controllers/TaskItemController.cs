@@ -2,6 +2,7 @@ using api.Data;
 using api.DTOs.TaskItems;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -16,16 +17,17 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var taskItems = _context.TaskItem.ToList().Select(s => s.toTaskItemDto());
+            var taskItems = await _context.TaskItem.ToListAsync();
+            var taskItemDto = taskItems.Select(s => s.toTaskItemDto());
             return Ok(taskItems);
         }
 
         [HttpGet("{id}")]
-        public IActionResult getById([FromRoute] int id)
+        public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var taskItem = _context.TaskItem.Find(id);
+            var taskItem = await _context.TaskItem.FindAsync(id);
 
             if (taskItem == null) return NotFound();
 
@@ -33,18 +35,18 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public IActionResult createTaskItem([FromBody] CreateTaskItemDto newItem)
+        public async Task<IActionResult> CreateTaskItem([FromBody] CreateTaskItemDto newItem)
         {
             var newTaskItem = newItem.toTaskItemFromCreateDto();
-            _context.TaskItem.Add(newTaskItem);
-            _context.SaveChanges();
-            return CreatedAtAction(nameof(getById), new { id = newTaskItem.Id }, newTaskItem.toTaskItemDto());
+            await _context.TaskItem.AddAsync(newTaskItem);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetById), new { id = newTaskItem.Id }, newTaskItem.toTaskItemDto());
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateTaskItem([FromRoute] int Id, [FromBody] UpdateTaskItemDto updateTaskItemDto)
+        public async Task<IActionResult> UpdateTaskItem([FromRoute] int Id, [FromBody] UpdateTaskItemDto updateTaskItemDto)
         {
-            var TaskItemModel = _context.TaskItem.FirstOrDefault(x => x.Id == Id);
+            var TaskItemModel = await _context.TaskItem.FirstOrDefaultAsync(x => x.Id == Id);
 
             if (TaskItemModel == null)
             {
@@ -59,9 +61,24 @@ namespace api.Controllers
             TaskItemModel.DueDate = updateTaskItemDto.DueDate;
             TaskItemModel.IsCompleted = updateTaskItemDto.IsCompleted;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(TaskItemModel.toTaskItemDto());
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTaskItem([FromRoute] int Id)
+        {
+            var TaskItemModel = await _context.TaskItem.FirstOrDefaultAsync(x => x.Id == Id);
+
+            if (TaskItemModel == null)
+            {
+                return NotFound();
+            }
+
+            _context.TaskItem.Remove(TaskItemModel);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
