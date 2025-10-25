@@ -1,4 +1,5 @@
 using api.DTOs.TaskItems;
+using api.Helpers;
 using api.Mappers;
 using api.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,12 @@ namespace api.Controllers
         private readonly ITaskItemRepository _repo = repo;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? sortBy, [FromQuery] bool isDescending = false, [FromQuery] string? searchTerm = null)
         {
-            var taskItems = await _repo.GetAllAsync();
+            var query = new QueryObject(sortBy, isDescending, searchTerm);
+            var taskItems = await _repo.GetAllAsync(query);
             var taskItemDto = taskItems.Select(s => s.toTaskItemDto());
-            return Ok(taskItems);
+            return Ok(taskItemDto);
         }
 
         [HttpGet("{id}")]

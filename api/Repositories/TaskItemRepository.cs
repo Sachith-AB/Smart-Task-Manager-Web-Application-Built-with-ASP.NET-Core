@@ -1,6 +1,8 @@
 using api.Data;
+using api.Helpers;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace api.Repositories
 {
@@ -27,9 +29,47 @@ namespace api.Repositories
             return true;
         }
 
-        public Task<List<TaskItem>> GetAllAsync()
+        public async Task<List<TaskItem>> GetAllAsync(QueryObject queryObject)
         {
-            return _context.TaskItem.ToListAsync();
+            var taskItems = _context.TaskItem.AsQueryable();
+
+            // Apply search filter first (case-insensitive)
+            if (!string.IsNullOrWhiteSpace(queryObject.SearchTerm))
+            {
+                var searchLower = queryObject.SearchTerm.ToLower();
+                taskItems = taskItems.Where(x => x.Description.ToLower().Contains(searchLower));
+            }
+
+            // Apply sorting
+            if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
+            {
+                if (queryObject.SortBy.ToLower() == "description")
+                {
+                    taskItems = queryObject.IsDescending
+                        ? taskItems.OrderByDescending(x => x.Description)
+                        : taskItems.OrderBy(x => x.Description);
+                }
+                else if (queryObject.SortBy.ToLower() == "deadline")
+                {
+                    taskItems = queryObject.IsDescending
+                        ? taskItems.OrderByDescending(x => x.Deadline)
+                        : taskItems.OrderBy(x => x.Deadline);
+                }
+                else if (queryObject.SortBy.ToLower() == "status")
+                {
+                    taskItems = queryObject.IsDescending
+                        ? taskItems.OrderByDescending(x => x.Status)
+                        : taskItems.OrderBy(x => x.Status);
+                }
+                else if (queryObject.SortBy.ToLower() == "piority")
+                {
+                    taskItems = queryObject.IsDescending
+                        ? taskItems.OrderByDescending(x => x.Piority)
+                        : taskItems.OrderBy(x => x.Piority);
+                }
+            }
+
+            return await taskItems.ToListAsync();
         }
 
         public async Task<TaskItem?> GetById(int Id)
