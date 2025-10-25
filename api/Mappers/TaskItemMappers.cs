@@ -36,5 +36,19 @@ namespace api.Mappers
                 IsCompleted = taskItemDto.IsCompleted,
             };
         }
+
+        public static TaskItem toTaskItemFromUpdateDto(this UpdateTaskItemDto taskItemDto)
+        {
+            return new TaskItem
+            {
+                Description = taskItemDto.Description,
+                Piority = taskItemDto.Piority,
+                Status = taskItemDto.Status,
+                Deadline = taskItemDto.Deadline,
+                AssignToUserId = taskItemDto.AssignToUserId,
+                DueDate = taskItemDto.DueDate,
+                IsCompleted = taskItemDto.IsCompleted,
+            };
+        }
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using api.Data;
 using api.DTOs.TaskItems;
 using api.Mappers;
@@ -43,6 +39,29 @@ namespace api.Controllers
             _context.TaskItem.Add(newTaskItem);
             _context.SaveChanges();
             return CreatedAtAction(nameof(getById), new { id = newTaskItem.Id }, newTaskItem.toTaskItemDto());
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTaskItem([FromRoute] int Id, [FromBody] UpdateTaskItemDto updateTaskItemDto)
+        {
+            var TaskItemModel = _context.TaskItem.FirstOrDefault(x => x.Id == Id);
+
+            if (TaskItemModel == null)
+            {
+                return NotFound();
+            }
+
+            TaskItemModel.Description = updateTaskItemDto.Description;
+            TaskItemModel.Piority = updateTaskItemDto.Piority;
+            TaskItemModel.Status = updateTaskItemDto.Status;
+            TaskItemModel.Deadline = updateTaskItemDto.Deadline;
+            TaskItemModel.AssignToUserId = updateTaskItemDto.AssignToUserId;
+            TaskItemModel.DueDate = updateTaskItemDto.DueDate;
+            TaskItemModel.IsCompleted = updateTaskItemDto.IsCompleted;
+
+            _context.SaveChanges();
+
+            return Ok(TaskItemModel.toTaskItemDto());
         }
     }
 }
