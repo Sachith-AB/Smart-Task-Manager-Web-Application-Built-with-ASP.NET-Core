@@ -7,14 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace api.Models
 {
-    public class AppRole : IdentityRole
-    {
-        // These properties come from IdentityRole:
-        // - Id (string) - Unique identifier for the role
-        // - Name (string) - Role name (e.g., "Admin", "User", "Manager")
-        // - NormalizedName (string) - Normalized role name for searches
-        // - ConcurrencyStamp (string) - Token for concurrency control
-
-        // You can add custom properties here if needed
-    }
+    // DEPRECATED: Use IdentityRole instead
+    // AppRole is no longer needed as we use IdentityRole directly
+    // Keeping this file for backward compatibility, but it's not used
 }

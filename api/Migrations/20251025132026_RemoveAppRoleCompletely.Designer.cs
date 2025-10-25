@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using api.Data;
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251025132026_RemoveAppRoleCompletely")]
+    partial class RemoveAppRoleCompletely
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,14 +54,14 @@ namespace api.Migrations
                         new
                         {
                             Id = "1",
-                            ConcurrencyStamp = "admin-concurrency-stamp-001",
+                            ConcurrencyStamp = "f3224207-3758-4532-9b64-9b8e161fc9dc",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "2",
-                            ConcurrencyStamp = "user-concurrency-stamp-001",
+                            ConcurrencyStamp = "7d21c37d-9ca9-448e-aa82-67486325bdbe",
                             Name = "User",
                             NormalizedName = "USER"
                         });

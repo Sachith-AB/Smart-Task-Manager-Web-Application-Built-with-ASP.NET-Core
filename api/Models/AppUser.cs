@@ -17,14 +17,12 @@ namespace api.Models
 
         // Custom properties not from IdentityUser:
         public string FullName { get; set; } = string.Empty;
-        public string? RoleId { get; set; }  // Changed from int to string to match AppRole.Id
         public string? ProfileImageUrl { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
 
         // Relationships
-        public AppRole? Role { get; set; }
         public ICollection<TaskItem>? Tasks { get; set; }
     }
 }
