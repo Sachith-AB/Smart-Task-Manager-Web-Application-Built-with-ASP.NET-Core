@@ -1,16 +1,25 @@
+using System.Security.Claims;
 using api.DTOs.TaskItems;
 using api.Helpers;
 using api.Mappers;
 using api.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [Route("api/taskItems")]
     [ApiController]
+    [Authorize]
     public class TaskItemController(ITaskItemRepository repo) : ControllerBase
     {
         private readonly ITaskItemRepository _repo = repo;
+
+        private string? GetUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+            return userIdClaim?.Value;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] string? sortBy, [FromQuery] bool isDescending = false, [FromQuery] string? searchTerm = null, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
@@ -34,7 +43,14 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTaskItem([FromBody] CreateTaskItemDto newItem)
         {
+            var userId = GetUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(new { message = "User ID not found in token" });
+            }
+
             var newTaskItem = newItem.toTaskItemFromCreateDto();
+            newTaskItem.AssignToUserId = userId;  // Assign task to current user
             var createdItem = await _repo.CreateTaskItem(newTaskItem);
             return CreatedAtAction(nameof(GetById), new { id = newTaskItem.Id }, newTaskItem.toTaskItemDto());
         }
